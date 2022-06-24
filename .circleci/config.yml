@@ -103,7 +103,6 @@ jobs:
             npm install
             npm run test
 
-
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -118,6 +117,56 @@ jobs:
             npm install
             npm run test
 
+  deploy-frontend-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install pre-reqs
+          command: |
+            yum install -y gzip tar
+
+      - run:
+          name: Create frontend infra
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --tags project=udapeople
+      - destroy-environment
+
+  deploy-backend-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install pre-reqs
+          command: |
+            yum install -y gzip tar
+      - run:
+          name: Create backend infra
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --tags project=udapeople
+   
+      - run:
+          name: Add backend ip to ansible inventory
+          command: |
+            touch inventory.txt
+            echo [web] > .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:project,Values=udapeople" "Name=instance-state-name,Values=running" \
+              --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+            
+      - destroy-environment
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
