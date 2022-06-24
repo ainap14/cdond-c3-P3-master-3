@@ -99,11 +99,10 @@ jobs:
       - run:
           name: frontend test
           command: |
-            #your code goes here
             cd frontend
             npm install
             npm run test
-      - destroy-environment
+
 
   test-backend:
     docker:
@@ -115,11 +114,10 @@ jobs:
       - run:
           name: backend test
           command: |
-            #your code goes here
             cd backend
             npm install
             npm run test
-      - destroy-environment
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
