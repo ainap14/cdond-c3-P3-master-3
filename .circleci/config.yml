@@ -165,7 +165,7 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" "Name=instance-state-name,Values=running" \
               --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            
+
       - destroy-environment
 
 # Invoke jobs via workflows
@@ -183,3 +183,5 @@ workflows:
           requires: [test-frontend]
       - scan-backend:
           requires: [test-backend]
+      - deploy-frontend-infrastructure
+      - deploy-backend-infrastructure
