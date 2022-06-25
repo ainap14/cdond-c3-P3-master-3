@@ -184,35 +184,36 @@ jobs:
       - destroy-environment
 
   configure-infrastructure:
-      docker:
-        # Docker image here that supports Ansible
-        - image: python:3.7-alpine3.11
-      steps:
-        # Checkout code from git
-        - checkout
-        # Add ssh keys with fingerprint
-        - add_ssh_keys:
-            fingerprints: ["d6:ce:95:d0:62:22:aa:3f:0f:f7:c8:32:d1:b8:b9:17"] # You can get this ID in the section where you registered the SSH Key
-        # attach workspace
-        - attach_workspace:
-            at: ~/
-        - run:
-            name: Install dependencies
-            command: |
-              # install the dependencies needed for your playbook
-              apk add --update ansible
-              pip3 install awscli
+    docker:
+      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["d6:ce:95:d0:62:22:aa:3f:0f:f7:c8:32:d1:b8:b9:17"] # You can get this ID in the section where you registered the SSH Key
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible
+            pip3 install awscli
 
-        - run:
-            name: Configure server
-            command: |
-              cd .circleci/ansible
-              echo "Contents  of the inventory.txt file is -------"
-              cat inventory.txt
-              ansible-playbook -i inventory.txt configure-server.yml
-        # Here's where you will add some code to rollback on failure  
-        - destroy-environment      
-        - revert-migrations
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment      
+      - revert-migrations
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
