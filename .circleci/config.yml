@@ -180,13 +180,13 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" "Name=instance-state-name,Values=running" \
               --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-      -run: 
-          name: export backend ip
-          command: |
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
+      # -run: 
+      #     name: export backend ip
+      #     command: |
+      #       export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
 
-            curl https://kvdb.io/9ad179kyNWDqcyuH5LG9Ccbackend_api_${CIRCLE_WORKFLOW_ID:0:7}  -d ${BACKEND_IP}
-            curl --insecure  https://kvdb.io/9ad179kyNWDqcyuH5LG9Cc/backend_api_${CIRCLE_WORKFLOW_ID:0:7}
+      #       curl https://kvdb.io/9ad179kyNWDqcyuH5LG9Ccbackend_api_${CIRCLE_WORKFLOW_ID:0:7}  -d ${BACKEND_IP}
+      #       curl --insecure  https://kvdb.io/9ad179kyNWDqcyuH5LG9Cc/backend_api_${CIRCLE_WORKFLOW_ID:0:7}
 
       - destroy-environment
 
