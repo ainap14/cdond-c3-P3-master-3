@@ -310,7 +310,7 @@ jobs:
           name: Deploy backend
           command: |
             pwd
-            cd backend
+            cd .circleci/backend
             npm install
             npm run build
             cd ..
@@ -340,6 +340,7 @@ jobs:
             # your code here
             apk add --update curl npm tar gzip nodejs
             pip install awscli
+            /usr/local/bin/python -m pip install --upgrade pip
             
       - run:
           name: Get backend url
