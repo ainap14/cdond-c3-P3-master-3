@@ -178,6 +178,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople" "Name=instance-state-name,Values=running" \
               --output text >> .circleci/ansible/inventory.txt
+            chmod 744 inventory.txt
             cat .circleci/ansible/inventory.txt
 
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
@@ -231,6 +232,7 @@ jobs:
           command: |
             cd backend
             npm install
+            npm audit
             npm run migrations > migrations_dump.txt
 
       - run:
@@ -347,6 +349,7 @@ jobs:
             # your code here
             apk add --update tar gzip ansible nodejs npm curl jq nginx
             pip install awscli
+            npm audit fix
 
       - run:
             name: installing openssh
