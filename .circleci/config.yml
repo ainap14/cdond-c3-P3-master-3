@@ -263,6 +263,8 @@ workflows:
       - deploy-backend-infrastructure
       - configure-infrastructure:
           requires: [deploy-backend-infrastructure, deploy-frontend-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
 
   # deploy_and_notify:
   #   jobs:
