@@ -210,7 +210,7 @@ jobs:
           name: Configure server
           command: |
             pwd
-            cd ../../.circleci/ansible
+            cd .circleci/ansible
             pwd
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
