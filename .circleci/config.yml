@@ -349,7 +349,6 @@ jobs:
             apk add --update tar gzip ansible nodejs npm curl jq nginx
             pip install awscli
 
-
       - run:
             name: installing openssh
             command: |
